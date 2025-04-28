@@ -937,7 +937,7 @@ if ($HOSTNAME == "default"){
 
 process Adapter_Trimmer_Quality_Module_FastQC {
 
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.(html|zip)$/) "fastqc_original_files/$filename"}
+publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.(html|zip)$/) "fastqc/$filename"}
 input:
  val mate
  tuple val(name), file(reads)
@@ -965,7 +965,6 @@ if ($HOSTNAME == "default"){
 
 process Adapter_Trimmer_Quality_Module_FastQC_after_Adapter_Removal {
 
-publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /.*.(html|zip)$/) "fastqc_after_adapter_removal/$filename"}
 input:
  val mate
  tuple val(name), file(reads)
