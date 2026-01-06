@@ -6,7 +6,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - macs2=2.1.2
+  - macs3=3.0.1
   - fastqc=0.11.8
   - star=2.6.1d # don't upgrade me - 2.7X indices incompatible with iGenomes.
   - picard=2.18.27

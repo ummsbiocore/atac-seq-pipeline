@@ -2595,14 +2595,14 @@ samtools flagstat bam/${name}.bam >> ${name}@Reads@${name}_duplicates_stats.log
 }
 
 //* params.genome_sizes =  ""  //* @input
-macs2_callpeak_parameters = params.ATAC_Module_ATAC_Prep.macs2_callpeak_parameters
+macs3_callpeak_parameters = params.ATAC_Module_ATAC_Prep.macs3_callpeak_parameters
 band_width = params.ATAC_Module_ATAC_Prep.band_width
 bedtoolsCoverage_Parameters = params.ATAC_Module_ATAC_Prep.bedtoolsCoverage_Parameters
 compare_Custom_Bed = params.ATAC_Module_ATAC_Prep.compare_Custom_Bed
 output_prefix = params.ATAC_Module_ATAC_Prep.output_prefix
 sample_prefix = params.ATAC_Module_ATAC_Prep.sample_prefix
 input_prefix = params.ATAC_Module_ATAC_Prep.input_prefix
-//* @spreadsheet:{output_prefix,sample_prefix,input_prefix} @multicolumn:{output_prefix,sample_prefix,input_prefix},{macs2_callpeak_parameters,band_width,bedtoolsCoverage_Parameters}
+//* @spreadsheet:{output_prefix,sample_prefix,input_prefix} @multicolumn:{output_prefix,sample_prefix,input_prefix},{macs3_callpeak_parameters,band_width,bedtoolsCoverage_Parameters}
 samplehash = [:]
 inputhash = [:]
 output_prefix.eachWithIndex { key, i -> inputhash[key] = input_prefix[i] }
@@ -2624,8 +2624,10 @@ output:
  path "bam/${name}.bam"  ,emit:g76_30_bam_file11_g76_31 
  val output_prefix  ,emit:g76_30_name23_g76_31 
 
+container "quay.io/biocontainers/bedtools:2.31.1--h13024bc_3"
+
 when:
-(params.run_ATAC_MACS2 && (params.run_ATAC_MACS2 == "yes")) || !params.run_ATAC_MACS2
+(params.run_ATAC_MACS3 && (params.run_ATAC_MACS3 == "yes")) || !params.run_ATAC_MACS3
 
 script:
 """
@@ -2639,7 +2641,7 @@ mv ${name}.adjust.bed bed/${name}.bed
 }
 
 
-process ATAC_Module_ATAC_MACS2 {
+process ATAC_Module_ATAC_MACS3 {
 
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /bam\/.*.bam$/) "atac/$filename"}
 publishDir params.outdir, mode: 'copy', saveAs: {filename -> if (filename =~ /${name}.*$/) "atac/$filename"}
@@ -2654,6 +2656,8 @@ output:
  tuple val(name), file("bam/*.bam")  ,emit:g76_31_bam_file12_g76_27 
  val compare_bed  ,emit:g76_31_compare_bed20_g76_27 
  path "${name}*"  ,emit:g76_31_resultsdir310_g_70 
+
+container "quay.io/berkay_ekren/macs3_samtools:1.0.3"
 
 script:
 genomeSizeText = ""
@@ -2697,7 +2701,7 @@ fi
 echo \${eachSampleArBed[@]}
 echo \${eachSampleArBam[@]}
 
-macs2 callpeak --bw ${band_width} -t \${sample_set} \${input_set} -n ${name} ${genomeSizeText} ${macs2_callpeak_parameters}
+macs3 callpeak --bw ${band_width} -t \${sample_set} \${input_set} -n ${name} ${genomeSizeText} ${macs3_callpeak_parameters}
 
 #bam files
 if [ "\$numSamples" -gt "1" ]; then
@@ -2705,9 +2709,6 @@ if [ "\$numSamples" -gt "1" ]; then
 else 
     cp  \$bam_set bam/${name}.bam
 fi
-
-
-
 """
 }
 
@@ -4217,12 +4218,12 @@ g76_30_bam_file11_g76_31 = ATAC_Module_ATAC_Prep.out.g76_30_bam_file11_g76_31
 g76_30_name23_g76_31 = ATAC_Module_ATAC_Prep.out.g76_30_name23_g76_31
 
 
-ATAC_Module_ATAC_MACS2(g_2_0_g76_31,g76_30_bam_file11_g76_31.collect(),g76_30_bed02_g76_31.collect(),g76_30_name23_g76_31.unique().flatten())
-g76_31_bed00_g76_26 = ATAC_Module_ATAC_MACS2.out.g76_31_bed00_g76_26
-g76_31_bam_file12_g76_27 = ATAC_Module_ATAC_MACS2.out.g76_31_bam_file12_g76_27
+ATAC_Module_ATAC_MACS3(g_2_0_g76_31,g76_30_bam_file11_g76_31.collect(),g76_30_bed02_g76_31.collect(),g76_30_name23_g76_31.unique().flatten())
+g76_31_bed00_g76_26 = ATAC_Module_ATAC_MACS3.out.g76_31_bed00_g76_26
+g76_31_bam_file12_g76_27 = ATAC_Module_ATAC_MACS3.out.g76_31_bam_file12_g76_27
 (g76_31_bam_file10_g74_121,g76_31_bam_file11_g74_131,g76_31_bam_file10_g74_133,g76_31_bam_file10_g74_134,g76_31_bam_file10_g74_142) = [g76_31_bam_file12_g76_27,g76_31_bam_file12_g76_27,g76_31_bam_file12_g76_27,g76_31_bam_file12_g76_27,g76_31_bam_file12_g76_27]
-g76_31_compare_bed20_g76_27 = ATAC_Module_ATAC_MACS2.out.g76_31_compare_bed20_g76_27
-g76_31_resultsdir310_g_70 = ATAC_Module_ATAC_MACS2.out.g76_31_resultsdir310_g_70
+g76_31_compare_bed20_g76_27 = ATAC_Module_ATAC_MACS3.out.g76_31_compare_bed20_g76_27
+g76_31_resultsdir310_g_70 = ATAC_Module_ATAC_MACS3.out.g76_31_resultsdir310_g_70
 
 
 BAM_Analysis_Module_UCSC_BAM2BigWig_converter(g76_31_bam_file10_g74_142,g78_54_genomeSizes21_g74_142)
