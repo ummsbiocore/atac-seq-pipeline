@@ -321,7 +321,7 @@ output:
  tuple val(name), file("result/*.fastq.gz")  ,emit:g71_23_reads00_g71_19 
  path "${name}.*.log"  ,emit:g71_23_log_file10_g71_24 
 
-container 'quay.io/viascientific/fastq_preprocessing:1.0'
+container 'quay.io/ummsbiocore/fastq_preprocessing:1.0'
 
 when:
 params.run_UMIextract == "yes" 
@@ -1075,7 +1075,7 @@ output:
  path "${newNameFasta}"  ,emit:g78_21_genome00_g78_58 
  path "${newNameGtf}"  ,emit:g78_21_gtfFile10_g78_57 
 
-container 'quay.io/viascientific/pipeline_base_image:1.0'
+container 'quay.io/ummsbiocore/pipeline_base_image:1.0'
 
 when:
 params.run_Download_Genomic_Sources == "yes"
@@ -1292,7 +1292,7 @@ input:
 output:
  path "${gtfName}.bed"  ,emit:g78_53_bed03_g78_54 
 
-container "${ params.IMAGE_BASE ? "${params.IMAGE_BASE}/rnaseq:4.0" : "quay.io/viascientific/rnaseq:4.0" }"
+container "${ params.IMAGE_BASE ? "${params.IMAGE_BASE}/rnaseq:4.0" : "quay.io/ummsbiocore/rnaseq:4.0" }"
 
 when:
 params.run_Download_Genomic_Sources == "yes"
@@ -1379,7 +1379,7 @@ output:
  path "*/${genomeSizes2}" ,optional:true  ,emit:g78_54_genomeSizes22_g74_131 
  path "*/${bed2}" ,optional:true  ,emit:g78_54_bed31_g74_134 
 
-container 'quay.io/viascientific/pipeline_base_image:1.0'
+container 'quay.io/ummsbiocore/pipeline_base_image:1.0'
 stageInMode 'copy'
 
 script:
@@ -1447,7 +1447,7 @@ input:
 output:
  path "*/${bowtie2new}" ,optional:true  ,emit:g73_14_bowtie2index02_g73_3 
 
-container 'quay.io/viascientific/pipeline_base_image:1.0'
+container 'quay.io/ummsbiocore/pipeline_base_image:1.0'
 stageInMode 'copy'
 
 when:
@@ -1604,7 +1604,7 @@ output:
  path "*/${bowtie2Index2}" ,optional:true  ,emit:g72_43_bowtie2index23_g72_44 
  path "*/${starIndex2}" ,optional:true  ,emit:g72_43_starIndex34_g72_44 
 
-container 'quay.io/viascientific/pipeline_base_image:1.0'
+container 'quay.io/ummsbiocore/pipeline_base_image:1.0'
 stageInMode 'copy'
 
 when:
@@ -3120,7 +3120,7 @@ output:
  path "*_metrics"  ,emit:g74_121_outputFileOut00_g74_82 
  path "results/*.pdf"  ,emit:g74_121_outputFilePdf12_g74_82 
 
-container 'quay.io/viascientific/picard:1.0'
+container 'quay.io/ummsbiocore/picard:1.0'
 
 when:
 (params.run_Picard_CollectMultipleMetrics && (params.run_Picard_CollectMultipleMetrics == "yes")) || !params.run_Picard_CollectMultipleMetrics
